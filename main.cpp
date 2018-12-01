@@ -19,6 +19,10 @@ int main(int argc, char const *argv[])
 	// Create new tsp object
 	TSP tsp(f, o);
     tsp.readFile();
-    tsp.printAdjList();
+    // tsp.printAdjList();
+    clock_t t = clock();
+    tsp.greedyTSP(2);
+    cout<<"\nTime: "<<((float) (clock() - t)) / CLOCKS_PER_SEC << "s\n";
+    tsp.printResult();
     return 0;
 }

@@ -32,12 +32,16 @@ private:
 
 
     int nearestNeighbour();
+
+	bool isVisited(bool* arr);
 protected:
 
 
 public:
 	// Number of nodes
 	int n;
+
+    int minpath;
 
 	void readFile();
 	// Current shortest path length
@@ -61,12 +65,12 @@ public:
 
 
     // Greedy function
-    //void greedyTSP();
+    void greedyTSP(int start);
 
 	// Debugging functions
 	//void printCities();
 	void printAdjList();
-	//void printResult();
+	void printResult();
 
 	// Get node count
 	int get_size() {return n;};
