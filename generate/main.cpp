@@ -1,17 +1,33 @@
-/*************************************************************************
-Title: main.cpp
-Description: main method for our Christofides implementation
-Authors: Sean Hinds, Ryan Hong, Jeff Herlitz
-Date: 08/16/17
-
-Changes:
-- cities coordinate changed from int to double
-- removed useless path_vals
-*************************************************************************/
-
 #include <iostream>
-#include "tsp.h"
-//#include "twoOpt.h"
+#include <math.h>
+#include <vector>
+#include <string>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
+#include <queue>
+#include <stack>
+
+using namespace std;
+
+struct City{
+	double x;
+	double y;
+};
+
+double get_distance(struct City c1, struct City c2){
+	double dx = c1.x - c2.x;
+	double dy = c1.y - c2.y;
+	double d  = sqrt(dx*dx + dy*dy);
+	return (double) d;
+}
+
+string iFile;
+string oFile;
+double **graph;
+vector<City> cities;
 
 int main(int argc, char** argv) {
 	if(argc < 2){
@@ -19,58 +35,51 @@ int main(int argc, char** argv) {
 	}
 
 	// Read file names from input
-	string input, output;
-	input = output = argv[1];
-	output.append(".tour");
+	string input;
+	input = argv[1];
 
-	// Create new tsp object
-	TSP tsp(input, output);
-	//cout << "tsp created" << endl;
-	int tsp_size = tsp.get_size();
+	iFile = input;
 
-	// Fill N x N matrix with distances between nodes
-	//cout << "Fillmatrix started" << endl;
-	tsp.fillMatrix();
-	//cout << "Filled Matrix" << endl;
-	tsp.printMatrix();
-	// Find a MST T in graph G
-	//tsp.findMST();
-	//cout << "MST created" << endl;
-	//tsp.printAdjList();
+	ifstream inStream;
+	inStream.open(iFile.c_str(), ios::in);
 
-	// Find a minimum weighted matching M for odd vertices in T
-	//tsp.perfectMatching();
-	//cout << "Matching completed" << endl;
+	if(!inStream){
+		cerr << "Can't open input file " << iFile << endl;
+		exit(1);
+	}
+	
+	//READ DATA
+	int c; double x, y;
+	int count = 0;
+	while(!inStream.eof()){
+		inStream >> c >> x >> y;
+		count++;
+		struct City newCity = {x,y};
+		cities.push_back(newCity);
+	}
+	count--;
+	inStream.close();
 
-	// Loop through each index and find shortest path
-	// TSP::distance_t best = TSP::DINF;
-	// int bestIndex = -1;
-	// for (long t = 0; t < tsp_size; t++) {
-	// 	TSP::distance_t result = tsp.findBestPath(t);
-	// 	if (result < best) {
-	// 		bestIndex = t;
-	// 		best = result;
-	// 	}
-	// }
-	//cout << "BestPath completed " << bestIndex << endl;
+	int n = count;
+	graph = new double*[n];
+	for(int i = 0; i < n; i++){
+		graph[i] = new double[n];
+		for(int j = 0; j < n; j++){
+			graph[i][j] = 0;
+		}
+	}
 
-	//Create path for best tour
-	// tsp.euler_tour(bestIndex,tsp.circuit);
-	// tsp.make_hamiltonian(tsp.circuit,tsp.pathLength);
+	for(int i = 0; i < n; i++){
+		for(int j = 0; j < n; j++){
+			graph[i][j] = graph[j][i] = get_distance(cities[i],cities[j]);
+		}
+	}
 
-	/*
-	tsp.euler_tour(0, tsp.circuit);
-	cout << "euler completed" << endl;
-	tsp.make_hamiltonian(tsp.circuit, tsp.pathLength);
-	cout << "ham completed" << endl;
-	*/
-
-	// Store best path
-	//tsp.create_tour(bestIndex);
-
-	//cout << "Final length: " << tsp.pathLength << endl;
-
-	// Print to file
-	//tsp.printPath();
-	//tsp.printResult();
+	cout<<n<<"\n";
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (i==j) continue;
+			cout<<i<< " "<<j<<" "<<graph[i][j]<<"\n";
+		}
+	}
 }

@@ -14,8 +14,6 @@
 
 using namespace std;
 
-
-
 class TSP
 {
 private:
@@ -30,7 +28,7 @@ private:
 
 	// Graph functions
 	void euler(int pos, vector<int> &path);
-	void hamilton(vector<int> &path, int &path_dist);
+	void hamilton(vector<int> &path, double &path_dist);
 protected:
 
 
@@ -65,7 +63,7 @@ public:
 	// Graph functions
 	void findMST();
 	void perfect_matching();
-	int find_path(int pos);
+	double find_path(int pos);
 
 	// Debugging functions
 	void printAdjList();
@@ -81,5 +79,4 @@ struct thread_data {
     int start;
 };
 
-void greedy(TSP* tsp);
-void cristi(TSP *tsp);
+void algo(TSP* tsp, int no_threads);

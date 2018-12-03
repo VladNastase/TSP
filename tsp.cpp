@@ -14,6 +14,8 @@ using namespace std;
 #define DEBUG 1
 #endif
 
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
 // Constructor
 TSP::TSP(string in) {
     inFile = in;
@@ -78,6 +80,9 @@ void TSP::greedyTSP(int start) {
 }
 
 void TSP::findMST() {
+    pthread_mutex_lock(&mutex);
+    std::fill_n(minpath, n, std::numeric_limits<double>::max());
+    pthread_mutex_unlock(&mutex);
     double weight[n];
     bool visited[n];
     int parent[n];
@@ -197,7 +202,7 @@ void TSP::euler (int pos, vector<int> &path) {
 }
 
 // Removes doubles from euler path
-void TSP::hamilton(vector<int> &path, int &path_dist) {
+void TSP::hamilton(vector<int> &path, double &path_dist) {
     bool visited[n];
     memset(visited, 0, n * sizeof(bool));
 
@@ -210,7 +215,7 @@ void TSP::hamilton(vector<int> &path, int &path_dist) {
 
     while (next != path.end()) {
         if (!visited[*next]) {
-            path_dist += multigraph[*curr][findIdx(*curr, *next)].second;
+            path_dist += adjlist[*curr][findIdx(*curr, *next)].second;
             curr = next;
             visited[*curr] = true;
             next = curr + 1;
@@ -220,17 +225,19 @@ void TSP::hamilton(vector<int> &path, int &path_dist) {
     }
 
     // Add the distance back to start
-    path_dist += multigraph[*curr][findIdx(*curr, *next)].second;
+    path_dist += adjlist[*curr][findIdx(*curr, *next)].second;
 }
 
 
 // Uses euler and hamilton to determine a path
-int TSP::find_path (int pos) {
+double TSP::find_path (int pos) {
     vector<int>path;
     euler(pos, path);
-    int length;
+    double length;
     hamilton(path, length);
 
+    pthread_mutex_lock(&mutex);
     minpath[pos] = length;
+    pthread_mutex_unlock(&mutex);
     return length;
 }

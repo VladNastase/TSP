@@ -1,5 +1,5 @@
 #include "algo.h"
-#define G_THREADS 8
+//#define no_threads 8
 
 void *func(void* struc) {
     struct thread_data *data = (struct thread_data*) struc;
@@ -14,23 +14,25 @@ void *func(void* struc) {
 // results of this function are stored in the minpath variable at the
 // same position with the starting node, the best path being determined
 // by the printResult function
-void greedy(TSP* tsp) {
-    pthread_t threads[G_THREADS];
-    struct thread_data* data = new struct thread_data[G_THREADS];
+void algo(TSP* tsp, int no_threads) {
+    pthread_t threads[no_threads];
+    struct thread_data* data = new struct thread_data[no_threads];
 
-    int inc = tsp->get_size()/G_THREADS;
-    int start = 0;
+    // for (int j = 0; j < no_runs; j++) {    
+        int inc = tsp->get_size()/no_threads;
+        int start = 0;
 
-    for (int i = 0; i < G_THREADS; i++) {
-        // preapre data
-        data[i].tsp = tsp;
-        data[i].start = start;
-        // run threads
-        pthread_create(&threads[i], NULL, func, (void*)&data[i]);
-        start += inc;
-    }
-    // join threads
-    for (int i = 0; i < G_THREADS; i++) {
-        pthread_join(threads[i], NULL);
-    }
+        for (int i = 0; i < no_threads; i++) {
+            // preapre data
+            data[i].tsp = tsp;
+            data[i].start = start;
+            // run threads
+            pthread_create(&threads[i], NULL, func, (void*)&data[i]);
+            start += inc;
+        }
+        // join threads
+        for (int i = 0; i < no_threads; i++) {
+            pthread_join(threads[i], NULL);
+        }
+    // }
 }

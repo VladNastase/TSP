@@ -1,5 +1,4 @@
 #include "algo.h"
-#define C_THREADS 32
 
 void *cfunc(void* struc) {
     struct thread_data *data = (struct thread_data*) struc;
@@ -9,23 +8,23 @@ void *cfunc(void* struc) {
     pthread_exit(NULL);
 }
 
-void cristi(TSP *tsp) {
+void algo(TSP *tsp, int no_threads) {
     tsp->findMST();
     tsp->perfect_matching();
 
-    pthread_t threads[C_THREADS];
-    struct thread_data* data = new struct thread_data[C_THREADS];
-    int inc = tsp->get_size()/C_THREADS - 1;
+    pthread_t threads[no_threads];
+    struct thread_data* data = new struct thread_data[no_threads];
+    int inc = tsp->get_size()/no_threads;
     int start = 0;
 
-    for (int i = 0; i < C_THREADS; i++) {
+    for (int i = 0; i < no_threads; i++) {
         data[i].tsp = tsp;
         data[i].start = start;
         pthread_create(&threads[i], NULL, cfunc, (void*)&data[i]);
         start += inc;
     }
 
-    for (int i = 0; i < C_THREADS; i++) {
+    for (int i = 0; i < no_threads; i++) {
         pthread_join(threads[i], NULL);
     }
 }
