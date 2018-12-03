@@ -1,0 +1,35 @@
+Nastase Vlad-Iulius 322CD
+
+algo.cpp contine implementarea "multi-threaded" a algoritmului lui Christofides
+algo2.cpp contine implementare algoritmului Greedy Nearest Neighbour
+tsp.cpp contine implementarea clasei din algo.h sia  diferitilor algoritmi ce
+ajuta in rezolvare
+
+checkerul are o optiune --extra care va genera 2 teste suplimentarea. acestea
+au dimensiuni foarte mari (~500mb, respectiv 3.5gb). Daca rularea acestora e
+posibila (consuma 4gb de ram cel mai mare si dureaza aprox 2 minute pe laptopul 
+meu), atunci adaugati optiunea --extra.
+
+desi in etapa 1 am spus ca voi modifica nearest neighbour sa priveasca 2 pasi
+inainte, abilitatea mea limitata de a programa in c++ si timpul la fel de limitata
+m-au facut sa aleg sa rulez pe mai multe noduri de inceput in paralel si sa aleg
+cea mai scurta cale in cazul ambilor algoritmi.
+
+testele de la 6 la 10 sunt luate de pe TSPLIB si trecute prin programul din folderul
+generate. testele de la 1 la 5 sunt facute random, ca puncte in plan (formatul 
+TSPLIB) si trecute prin acelasi program de mai sus.
+
+solutiile exacte au fost luate de pe TSPLIB sau calculate cu ajutorul 
+programului Concorde.
+
+solutiile au fost inspirate din urmatoarele locatii:
+https://github.com/guillaumeportails/Christofides_Algorithm_Cpp
+https://github.com/beckysag/traveling-salesman
+
+Imi cer scuze pentru formatul foarte pe fuga atat al codului, cat si al chekerelor
+si readme-ului. Pentru eventuale neclaritati ma puteti contacta atat pe moodle, cat
+si la vladdnastase@gmail.com
+
+PS: testele se incadreaza in limitarile algoritmilor alesi: grafurile sunt simetrice
+si respecta inegalitatea triunghiului. voi mentiona aceste downside-uri la urmatoarea
+etapa.
