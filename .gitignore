@@ -5,3 +5,9 @@ tsp
 \.*
 *.txt
 tsp_best
+in/main.cpp
+in/a.out
+generate/*.tsp
+!*/d15112.tsp
+generate/gen
+generate/*.in

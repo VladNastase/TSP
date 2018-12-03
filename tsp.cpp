@@ -42,9 +42,9 @@ void TSP::readFile() {
     while (!in.eof()) {
         in >> current >> next >> cost;
         
-        adjlist[current].push_back(make_pair(next, cost));
+        adjlist[current - 1].push_back(make_pair(next - 1, cost));
         if (SYMMETRICAL) {
-            adjlist[next].push_back(make_pair(current, cost));
+            adjlist[next - 1].push_back(make_pair(current - 1, cost));
         }
     }
 }
@@ -54,29 +54,41 @@ void TSP::greedyTSP(int start) {
     bool visited[n];
     memset(visited, 0, sizeof(visited[0]));
     // Set value of path to 0; set starting node to visited and remember it
+
+            pthread_mutex_lock(&mutex);
     minpath[start] = 0;
+    pthread_mutex_unlock(&mutex);
     visited[start] = true;
     int startt = start;
+    //cout<<startt<<"\n";
 
     while (!isVisited(visited)) {
         double min = std::numeric_limits<double>::max();
-        int minidx;
+        int minidx = -1;
         // Search for the closest neighbour of the current vertex
         for (int i = 0; i < (int)adjlist[start].size(); i++) {
-            if (i == start) continue;
+            //if (i == start) continue;
             if (adjlist[start][i].second < min 
                     && !visited[adjlist[start][i].first]) {
+                        
                 min = adjlist[start][i].second;
                 minidx = adjlist[start][i].first;
             }
         }
+        //cout<<"Node "<<minidx<<"; cost "<<min<<"\n";
         // Visit it, add it to the path length and search his neighbours next
+            pthread_mutex_lock(&mutex);
         minpath[startt] += min;
+    pthread_mutex_unlock(&mutex);
+
         start = minidx;
         visited[start] = true;
     }
     // Add the distance from the last node to the first one
-    minpath[startt] += adjlist[start][startt].second;
+        pthread_mutex_lock(&mutex);
+    minpath[startt] += adjlist[start][findIdx(start, startt)].second;
+    pthread_mutex_unlock(&mutex);
+
 }
 
 void TSP::findMST() {

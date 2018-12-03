@@ -74,12 +74,12 @@ int main(int argc, char** argv) {
 			graph[i][j] = graph[j][i] = get_distance(cities[i],cities[j]);
 		}
 	}
-
+	cout.precision(6);
 	cout<<n<<"\n";
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			if (i==j) continue;
-			cout<<i<< " "<<j<<" "<<graph[i][j]<<"\n";
+			cout<<i + 1<< " "<<j + 1<<" "<<graph[i][j]<<"\n";
 		}
 	}
 }

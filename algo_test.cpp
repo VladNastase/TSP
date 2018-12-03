@@ -21,12 +21,12 @@ int main(int argc, char const *argv[])
     //clock_t t = clock();
     int n = tsp.get_size();
     if (!BEST) {
-        if (n < 64) {
+        if (n < 128) {
             algo(&tsp, n);
         } else if (n < 512) {
-            algo(&tsp, 64);
-        } else {
             algo(&tsp, 128);
+        } else {
+            algo(&tsp, 64);
         }
     } else {
         if (n < 256) {
